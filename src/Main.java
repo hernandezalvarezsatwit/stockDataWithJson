@@ -20,9 +20,9 @@ public class Main {
         Object obj = null;
         try {
             obj = new JSONParser().parse(getJsonFrom(stockData));
-        } catch (ParseException e) {
-            System.out.println("---> Problem parsing JSON of stockData");
-            //Log.v("myApp", "Problem parsing JSON of stockData");
+        } catch (ParseException | IOException e) {
+            System.out.println("---> Problem parsing JSON of stockData or Buffer Reader error");
+            //Log.v("myApp", "Problem parsing JSON of stockData or Buffer Reader error");
             e.printStackTrace();
         }
         JSONObject jo = (JSONObject) obj;
@@ -56,7 +56,7 @@ public class Main {
         return data.toString();
     }
 
-    private static String getJsonFrom(String link) {
+    private static String getJsonFrom(String link) throws IOException {
         //Retrieve info from URL
         URL url = null;
         try {
@@ -95,15 +95,8 @@ public class Main {
         //Get information into string
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
         StringBuilder sb = new StringBuilder();
-        String line = null;
-        try {
-            line = br.readLine();
-        } catch (IOException e) {
-            //Log.v("myApp", "Buffer Reader Problem");
-            System.out.println("---> Buffer Reader Problem");
-            e.printStackTrace();
-        }
-        while(line != null)
+        String line;
+        while((line = br.readLine()) != null)
             sb.append(line);
 
         return sb.toString();
